@@ -3,7 +3,7 @@ import { CONFIG } from "../../lib/config"
 
 export async function GET() {
     // url for games
-    const getGames = `${CONFIG.BASE_URL}IPlayerService/GetOwnedGames/v0001/?key=${CONFIG.API_KEY}&steamid=${CONFIG.STEAM_ID}&include_appinfo=1&format=json`
+    const getGames = `${CONFIG.BASE_URL}IPlayerService/GetOwnedGames/v0001/?key=${CONFIG.API_KEY}&steamid=${CONFIG.STEAM_ID}&include_appinfo=1&include_played_free_games=1&format=json`
 
     // get api
     try {

@@ -1,12 +1,13 @@
 import Image from "next/image"
 import { SteamGame } from "./model/SteamGame/steamgame"
 import { Profile } from "./model/Profile/profile"
+import Link from "next/link"
 
 // get current games
 async function getGames() {
   // fetch 
   const res = await fetch('http://localhost:3000/api/games',
-    { next: { revalidate: 3600 } })
+    { next: { revalidate: 0 } })
   if (!res.ok) return []
   const data = await res.json()
   return data.response?.games || []
@@ -37,13 +38,23 @@ async function getFriends() {
 
 export default async function AllGames() {
   // get data
-  const games = await getGames()
+  const gameData = await getGames()
   const player = await getProfile()
   const friends = await getFriends()
 
+  // sort
+  const games = [...gameData].sort((a: SteamGame, b: SteamGame) => {
+    return a.name.localeCompare(b.name)
+  })
 
   return (
+    // container
     <main className="min-h-screen bg-[#1b2838] text-[#c6d4df] p-6 font-sans">
+      
+      <nav className="flex flex-row items-center text-[#c6d4df] hover:text-sky-500 border">
+        <Link href="/news">News</Link> 
+    </nav>
+
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-6 mb-5 bg-[#171a21] p-8 rounded shadow-2xl border-l-4 border-sky-500">
         <div className="relative group">
           <Image
@@ -77,7 +88,7 @@ export default async function AllGames() {
       
       <div className="lg:col-span-2 flex flex-col">
         <h2 className="text-xl uppercase tracking-widest text-white mb-4 border-b border-stone-700 pb-2">
-          Recent Games
+          All Games
         </h2>
         
           <div className="flex flex-col gap-4 max-h-150 overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2
